@@ -4,6 +4,7 @@ import TournamentSection from '@/components/TournamentSection';
 import AirdropSection from '@/components/AirdropsSection';
 import CouponSection from '@/components/CouponSection';
 import Featured from '@/components/featured';
+import Chatbot from '@/components/GeminiChatbot';
 
 
 function App() {
@@ -61,7 +62,9 @@ function App() {
         </section>
 
         {/* Main Sections */}
+        <Chatbot />
         <Featured />
+        
         <TournamentSection />
         <AirdropSection />
         <CouponSection />
