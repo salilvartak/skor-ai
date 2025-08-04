@@ -114,7 +114,7 @@ export default function Dashboard() {
       </div>
       {/* Sidebar */}
 
-      <aside className="fixed top-4 bottom-4 left-4 w-20 flex flex-col items-center gap-10 py-6 rounded-3xl bg-black/40 backdrop-blur-md z-10">
+      <aside className="fixed top-4 bottom-4 left-4 w-20 flex flex-col items-center gap-4 py-6 rounded-3xl bg-black/40 backdrop-blur-md z-10">
         <img src="/assets/logo.png" alt="Logo" className="w-10" />
         <div className="flex flex-col gap-12 mt-6 text-accent">
           <Link to="/home" className="group flex flex-col items-center gap-1">
