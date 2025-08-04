@@ -1,15 +1,16 @@
+// src/pages/profile.tsx
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { auth } from '@/firebase'; // Assuming firebase.ts is in the src directory
+import { auth } from '@/firebase';
 import { User as FirebaseUser } from 'firebase/auth';
 
-// Define the UserProfile type for better type safety
 interface UserProfile {
   fullName: string;
   email: string;
   avatarUrl?: string;
+  region?: string; // Add region to the UserProfile interface
 }
 
 const Profile = () => {
@@ -17,13 +18,15 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Listen for auth state changes to get the current user
     const unsubscribe = auth.onAuthStateChanged((user: FirebaseUser | null) => {
       if (user) {
+        // Simulating fetching region from a database or a placeholder
+        const userRegion = 'North America'; 
         setUserProfile({
           fullName: user.displayName || 'Unnamed User',
           email: user.email || 'No email provided',
           avatarUrl: user.photoURL || undefined,
+          region: userRegion,
         });
       } else {
         setUserProfile(null);
@@ -31,7 +34,6 @@ const Profile = () => {
       setLoading(false);
     });
 
-    // Cleanup the listener on component unmount
     return () => unsubscribe();
   }, []);
 
@@ -72,8 +74,12 @@ const Profile = () => {
             <p className="text-base text-gray-200">{userProfile.email}</p>
           </div>
           <div className="flex flex-col space-y-1">
+            <h4 className="text-sm font-semibold text-gray-300">Region</h4>
+            <p className="text-base text-gray-200">{userProfile.region || 'Not specified'}</p>
+          </div>
+          <div className="flex flex-col space-y-1">
             <h4 className="text-sm font-semibold text-gray-300">Member Since</h4>
-            <p className="text-base text-gray-200">Date Not Available</p> {/* You can add this logic later */}
+            <p className="text-base text-gray-200">Date Not Available</p>
           </div>
           <div className="pt-4">
             <Button className="w-full bg-accent hover:bg-accent/80">

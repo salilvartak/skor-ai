@@ -15,8 +15,7 @@ import {
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import { signOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { auth } from '@/firebase'; // Import auth from your Firebase config
-
-
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'; // Import Avatar components
 
 export default function Dashboard() {
   const [price, setPrice] = useState<string>("-");
@@ -90,7 +89,35 @@ export default function Dashboard() {
     if (!name) return 'U';
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
+useEffect(() => {
+  const fetchPriceData = async () => {
+    try {
+      const response = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=skor-ai&vs_currencies=usd&include_24hr_change=true"
+    );
+    const data = await response.json();
 
+      if (!response.ok) throw new Error("Failed to fetch price data");
+
+      
+      const price = data.bitcoin.usd.toFixed(2);
+      const change = data.bitcoin.usd_24h_change.toFixed(2);
+
+      setPrice(price);
+      setPctChange(
+        Number(change) >= 0 ? `+${change}%` : `${change}%`
+      );
+    } catch (err) {
+      console.error("Error fetching price data:", err);
+      setPrice("N/A");
+      setPctChange("Error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchPriceData();
+}, []);
 
   return (
     <div className="font-chakra min-h-screen bg-gradient-to-br from-[#141110] via-[#2a1f1a] to-back grid grid-cols-[auto_1fr_auto]">
@@ -116,7 +143,7 @@ export default function Dashboard() {
 
       <aside className="fixed top-4 bottom-4 left-4 w-20 flex flex-col items-center gap-4 py-6 rounded-3xl bg-black/40 backdrop-blur-md z-10">
         <img src="/assets/logo.png" alt="Logo" className="w-10" />
-        <div className="flex flex-col gap-12 mt-6 text-accent">
+        <div className="flex flex-col gap-8 mt-6 text-accent">
           <Link to="/home" className="group flex flex-col items-center gap-1">
             <Home className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
             <span className="text-xs text-gray-400 group-hover:text-white">Home</span>
@@ -186,7 +213,6 @@ export default function Dashboard() {
           {/* Left Column */}
           <div className="col-span-2 grid grid-rows-[auto_auto_1fr] gap-6">
             {/* Carousel Agent Box */}
-            {/* Carousel Agent Box with transitions */}
             <div
               className={`relative h-[280px] rounded-2xl overflow-hidden bg-cover bg-center duration-500 ease-in-out ${
                 agentSlides[currentSlide].bg
@@ -289,37 +315,30 @@ export default function Dashboard() {
 
       {/* Avatars */}
       <aside className="fixed top-4 bottom-4 right-4 w-20 flex flex-col items-center py-6 gap-4 rounded-3xl bg-black/40 backdrop-blur-md z-10">
-        {["avatar1", "avatar2", "avatar3", "avatar4"].map((avt, i) => (
-          <img
-            key={i}
-            src={`/${avt}.png`}
-            alt="User"
-            className="w-12 h-12 rounded-full ring-2 ring-green-400"
-          />
-        ))}
+        {user && (
+          <Link to="/profile">
+            <Avatar className="w-12 h-12 border-2 border-accent">
+              <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
+              <AvatarFallback className="bg-accent text-white text-xl">
+                {getUserInitials(user.displayName)}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
+        )}
       </aside>
     </div>
   );
 }
 function AgentCard({ name, image }: { name: string; image: string }) {
 
-  const path = `/dashboard/${name.toLowerCase()}`;
+const path = `/dashboard/${name.toLowerCase()}`;
 
-  return (
+return (
+  <Link to={path} className="bg-orange-700/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center hover:ring-2 hover:ring-orange-400 transition-all duration-200">
+    <img src={image} alt={name} className="w-fit h-32 mb-2" />
+  </Link>
 
-    <Link
-
-      to={path}
-
-      className="bg-orange-700/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center hover:ring-2 hover:ring-orange-400 transition-all duration-200"
-
-    >
-
-      <img src={image} alt={name} className="w-fit h-32 mb-2" />
-
-    </Link>
-
-  );
+);
 
 }
 
@@ -329,14 +348,10 @@ function AgentCard({ name, image }: { name: string; image: string }) {
 
 function LockedCard() {
 
-  return (
-
-    <div className="bg-gray-700/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center opacity-60 relative">
-
-      <img src="/assets/lock.png" alt="Locked Agent" className="w-fit h-32 mb-2 blur-sm" />
-
-    </div>
-
-  );
+return (
+  <div className="bg-gray-700/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center opacity-60 relative">
+    <img src="/assets/lock.png" alt="Locked Agent" className="w-fit h-32 mb-2 blur-sm" />
+  </div>
+);
 
 }

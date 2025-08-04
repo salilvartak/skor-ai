@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Search, User, Settings } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Header = () => {
   return (
@@ -13,12 +14,16 @@ export const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-2">
+            <Link to="/setting" className="group flex flex-col items-center gap-1">
             <Button variant="ghost" size="icon" className="text-white hover:text-black">
               <Settings className="h-5 w-5" />
             </Button>
+            </Link>
+            <Link to="/profile" className="group flex flex-col items-center gap-1">
             <Button variant="ghost" size="icon" className="text-white hover:text-black">
               <User className="h-5 w-5" />
             </Button>
+            </Link>
             <Button className="bg-accent hover:bg-accent/90 text-primary-foreground">
               Connect Wallet
             </Button>

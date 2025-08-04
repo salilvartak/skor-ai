@@ -1,5 +1,5 @@
 import React from 'react';
-import {Header} from '@/components/header';
+import {Header} from '@/components/Header';
 import TournamentSection from '@/components/TournamentSection';
 import AirdropSection from '@/components/AirdropsSection';
 import CouponSection from '@/components/CouponSection';
