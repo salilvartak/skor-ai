@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { auth } from '@/firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
   email: string;
   password: string;
-  fullName?: string;
+  fullName: string;
 }
 
-const AuthPage: React.FC = () => {
+const SkorAuthForm: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -16,6 +19,7 @@ const AuthPage: React.FC = () => {
     password: '',
     fullName: ''
   });
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -24,12 +28,29 @@ const AuthPage: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLogin) {
-      console.log('Login attempt:', { email: formData.email, password: formData.password });
+      try {
+        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        console.log('Login successful');
+        navigate('/dashboard');
+      } catch (error) {
+        console.error('Login failed:', error);
+        alert('Failed to sign in. Please check your credentials.');
+      }
     } else {
-      console.log('Signup attempt:', formData);
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+        if (userCredential.user) {
+          await updateProfile(userCredential.user, { displayName: formData.fullName });
+          console.log('Signup successful');
+          navigate('/profile-setup');
+        }
+      } catch (error) {
+        console.error('Signup failed:', error);
+        alert('Failed to create an account. Please try again.');
+      }
     }
   };
 
@@ -106,7 +127,7 @@ const AuthPage: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Enter your full name"
                         className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#EE5946]"
-                        required
+                        required={!isLogin}
                       />
                     </div>
                   </div>
@@ -185,4 +206,4 @@ const AuthPage: React.FC = () => {
   );
 };
 
-export default AuthPage;
+export default SkorAuthForm;

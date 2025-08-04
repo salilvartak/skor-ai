@@ -9,54 +9,87 @@ import {
   Settings,
   CircleAlert,
   CalendarSync,
-  Search 
+  Search,
+  LogOut, // Import the LogOut icon
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { signOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { auth } from '@/firebase'; // Import auth from your Firebase config
+
+
 
 export default function Dashboard() {
   const [price, setPrice] = useState<string>("-");
   const [pctChange, setPctChange] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<FirebaseUser | null>(null); // State for the current user
+  const navigate = useNavigate(); // Hook for navigation
 
 
-const agentSlides = [
-  {
-    title: "Agent Precision",
-    button: "Try Now →",
-    image: "",
-    bg: "bg-[url('/assets/cs2.webp')]",
-    link: "/agent/precision",
-  },
-  {
-    title: "Agent Hunter",
-    button: "Try Now →",
-    image: "",
-    bg: "bg-[url('/assets/hunter.webp')]",
-    link: "/dashboard/hunter",
-  },
-  {
-    title: "SKOR Coin",
-    button: "Checkout →",
-    image: "",
-    bg: "bg-[url('/assets/coin.png')]",
-    link: "/agent/scope",
-  },
-];
+  // Effect to listen for authentication state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
-const [currentSlide, setCurrentSlide] = useState(0);
-const [fade, setFade] = useState(true);
+  // Function to handle logging out
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.error("Error signing out:", error);
+      // Optional: Display a user-friendly error message
+    }
+  };
 
-// Slide transition logic
-useEffect(() => {
-  const interval = setInterval(() => {
-    setFade(false); // Start fade out
-    setTimeout(() => {
-      setCurrentSlide((prev) => (prev + 1) % agentSlides.length);
-      setFade(true); // Fade in new slide
-    }, 300); // Match with transition duration
-  }, 5000);
-  return () => clearInterval(interval);
-}, []);
+  const agentSlides = [
+    {
+      title: "Agent Precision",
+      button: "Try Now →",
+      image: "",
+      bg: "bg-[url('/assets/cs2.webp')]",
+      link: "/agent/precision",
+    },
+    {
+      title: "Agent Hunter",
+      button: "Try Now →",
+      image: "",
+      bg: "bg-[url('/assets/hunter.webp')]",
+      link: "/dashboard/hunter",
+    },
+    {
+      title: "SKOR Coin",
+      button: "Checkout →",
+      image: "",
+      bg: "bg-[url('/assets/coin.png')]",
+      link: "/agent/scope",
+    },
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  // Slide transition logic
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false); // Start fade out
+      setTimeout(() => {
+        setCurrentSlide((prev) => (prev + 1) % agentSlides.length);
+        setFade(true); // Fade in new slide
+      }, 300); // Match with transition duration
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [agentSlides.length]);
+
+
+  // Helper function to get initials for avatar
+  const getUserInitials = (name: string | null | undefined) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
 
 
   return (
@@ -75,7 +108,7 @@ useEffect(() => {
             }}
           ></div>
         ))}
-        
+
         {/* Grid Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] opacity-30"></div>
       </div>
@@ -84,13 +117,45 @@ useEffect(() => {
       <aside className="fixed top-4 bottom-4 left-4 w-20 flex flex-col items-center gap-10 py-6 rounded-3xl bg-black/40 backdrop-blur-md z-10">
         <img src="/assets/logo.png" alt="Logo" className="w-10" />
         <div className="flex flex-col gap-12 mt-6 text-accent">
-          <Link to="/home"><Home className="w-6 h-6 hover:text-white transition-colors" /></Link>
-          <Link to="/ai"><Brain className="w-6 h-6 hover:text-white transition-colors" /></Link>
-          <Link to="/tournaments"><Trophy className="w-6 h-6 hover:text-white transition-colors" /></Link>
-          <Link to="/labs"><Box className="w-6 h-6 hover:text-white transition-colors" /></Link>
-          <Link to="/analytics"><BarChart2 className="w-6 h-6 hover:text-white transition-colors" /></Link>
-          <Link to="/profile"><User className="w-6 h-6 hover:text-white transition-colors" /></Link>
-          <Link to="/settings"><Settings className="w-6 h-6 hover:text-white transition-colors" /></Link>
+          <Link to="/home" className="group flex flex-col items-center gap-1">
+            <Home className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+            <span className="text-xs text-gray-400 group-hover:text-white">Home</span>
+          </Link>
+          <Link to="/ai" className="group flex flex-col items-center gap-1">
+            <Brain className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+            <span className="text-xs text-gray-400 group-hover:text-white">Agents</span>
+          </Link>
+          <Link to="/tournaments" className="group flex flex-col items-center gap-1">
+            <Trophy className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+            <span className="text-xs text-gray-400 group-hover:text-white">Tournaments</span>
+          </Link>
+          <Link to="/labs" className="group flex flex-col items-center gap-1">
+            <Box className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+            <span className="text-xs text-gray-400 group-hover:text-white">Labs</span>
+          </Link>
+          <Link to="/analytics" className="group flex flex-col items-center gap-1">
+            <BarChart2 className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+            <span className="text-xs text-gray-400 group-hover:text-white">Analytics</span>
+          </Link>
+        </div>
+        {/* Logout button and user avatar at the bottom */}
+        <div className="mt-auto flex flex-col items-center gap-4">
+          <Link to="/profile" className="group flex flex-col items-center gap-1">
+            <User className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+            <span className="text-xs text-gray-400 group-hover:text-white">Profile</span>
+          </Link>
+          <Link to="/settings" className="group flex flex-col items-center gap-1">
+            <Settings className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
+            <span className="text-xs text-gray-400 group-hover:text-white">Settings</span>
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="group flex flex-col items-center gap-1 focus:outline-none"
+            aria-label="Logout"
+          >
+            <LogOut className="w-6 h-6 text-gray-400 group-hover:text-red-500 transition-colors" />
+            <span className="text-xs text-gray-400 group-hover:text-red-500">Logout</span>
+          </button>
         </div>
       </aside>
 
@@ -99,21 +164,21 @@ useEffect(() => {
         {/* Header */}
         <header className="flex justify-between items-center">
           <h1 className="text-xl font-bold font-chakra text-white">
-            Ready to Play, <span className="text-accent">Ranjit</span>
+            Ready to Play, <span className="text-accent">{user?.displayName || "Player"}</span>
           </h1>
           <div className="relative w-full max-w-xs ">
-      {/* Magnifying glass icon */}
-      <Search
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-400 w-5 h-5 z-20 pointer-events-none"
-      />
+            {/* Magnifying glass icon */}
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-400 w-5 h-5 z-20 pointer-events-none"
+            />
 
-      {/* Search input field */}
-      <input
-        type="search"
-        placeholder="Search..."
-        className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800/40 backdrop-blur-md text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 transition z-10"
-      />
-    </div>
+            {/* Search input field */}
+            <input
+              type="search"
+              placeholder="Search..."
+              className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800/40 backdrop-blur-md text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 transition z-10"
+            />
+          </div>
         </header>
 
         {/* Main Grid */}
@@ -181,7 +246,7 @@ useEffect(() => {
           {/* Right Column */}
           <div className="flex flex-col gap-6">
             {/* Price Box */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center h-[200px] flex flex-col  items-center">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center h-[200px] flex flex-col items-center">
               <h2 className="text-3xl text-accent font-semibold font-chakra">Price</h2>
               {loading ? (
                 <p className="text-white text-xl mt-2 font-chakra">Loading...</p>
@@ -236,25 +301,42 @@ useEffect(() => {
     </div>
   );
 }
-
-// Agent Card
 function AgentCard({ name, image }: { name: string; image: string }) {
-  const path = `/dashboard/${name.toLowerCase()}`;
-  return (
-    <Link
-      to={path}
-      className="bg-orange-700/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center hover:ring-2 hover:ring-orange-400 transition-all duration-200"
-    >
-      <img src={image} alt={name} className="w-fit h-32 mb-2" />
-    </Link>
-  );
+
+  const path = `/dashboard/${name.toLowerCase()}`;
+
+  return (
+
+    <Link
+
+      to={path}
+
+      className="bg-orange-700/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center hover:ring-2 hover:ring-orange-400 transition-all duration-200"
+
+    >
+
+      <img src={image} alt={name} className="w-fit h-32 mb-2" />
+
+    </Link>
+
+  );
+
 }
 
+
+
 // Locked Agent Card
+
 function LockedCard() {
-  return (
-    <div className="bg-gray-700/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center opacity-60 relative">
-      <img src="/assets/lock.png" alt="Locked Agent" className="w-fit h-32 mb-2 blur-sm" />
-    </div>
-  );
+
+  return (
+
+    <div className="bg-gray-700/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center opacity-60 relative">
+
+      <img src="/assets/lock.png" alt="Locked Agent" className="w-fit h-32 mb-2 blur-sm" />
+
+    </div>
+
+  );
+
 }
