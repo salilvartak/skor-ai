@@ -3,31 +3,32 @@ import { Send, Bot, User } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { cn } from "@/lib/utils";
 
-// Define the Message interface
+// Message type
 interface Message {
   text: string;
   sender: 'user' | 'bot';
 }
 
-// Ensure the API key is present before initializing the client.
+// Load API key from .env
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
 if (!apiKey) {
-  console.error("VITE_GEMINI_API_KEY environment variable is not set.");
+  console.error("❌ VITE_GEMINI_API_KEY environment variable is not set.");
 }
 
-// Initialize the Gemini API client.
-const genAI = new GoogleGenerativeAI('AIzaSyAwSWkIM04uzSSWv-NrBcUiqwGnKTJz31U');
+console.log("✅ Loaded Gemini API Key:", apiKey); // Debug log
 
-// Initialize the chat session and model once.
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-const chat = model.startChat({
+// Initialize Gemini client if API key exists
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
+const model = genAI?.getGenerativeModel({ model: "gemini-2.5-flash" });
+const chat = model?.startChat({
   generationConfig: {
     maxOutputTokens: 1000,
     temperature: 0.7,
   },
 });
 
+// Suggested questions
 const suggestedQuestions = [
   'How can I improve my aim in Valorant?',
   'What are some effective strategies for playing Apex Legends?',
@@ -40,7 +41,7 @@ const GeminiChatbot: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Add a direct check for the API key on component mount
+  // Check API key on mount
   useEffect(() => {
     if (!apiKey) {
       setError("API key not found. Please set VITE_GEMINI_API_KEY in your .env file.");
@@ -48,7 +49,7 @@ const GeminiChatbot: React.FC = () => {
   }, []);
 
   const handleSendMessage = async (messageText: string) => {
-    if (!messageText.trim() || isLoading || error) return;
+    if (!messageText.trim() || isLoading || error || !chat) return;
 
     const newMessage: Message = { text: messageText, sender: 'user' };
     setMessages(prev => [...prev, newMessage]);
@@ -56,23 +57,26 @@ const GeminiChatbot: React.FC = () => {
     setIsLoading(true);
 
     try {
+      console.log("📤 Sending message to Gemini:", messageText);
       const result = await chat.sendMessage(messageText);
-      const botResponseText = result.response.text();
 
-      if (!botResponseText) {
-        throw new Error("Empty response from API.");
+      console.log("📥 Full Gemini Response:", result);
+      const botResponseText = result?.response?.text?.() ?? '';
+      console.log("🧠 Gemini Response Text:", botResponseText);
+
+      if (!botResponseText.trim()) {
+        throw new Error("Empty or invalid response from Gemini API.");
       }
 
-      const botResponse: Message = {
-        text: botResponseText,
-        sender: 'bot'
-      };
-
-      setMessages(prev => [...prev, botResponse]);
+      const botMessage: Message = { text: botResponseText, sender: 'bot' };
+      setMessages(prev => [...prev, botMessage]);
 
     } catch (apiError) {
-      console.error('Error calling Gemini API:', apiError);
-      setMessages(prev => [...prev, { text: 'Sorry, I am unable to connect to the AI or received an empty response. Please check your API key and network connection.', sender: 'bot' }]);
+      console.error('❌ Error calling Gemini API:', apiError);
+      setMessages(prev => [...prev, {
+        text: 'Sorry, I am unable to connect to the AI or received an empty response. Please check your API key and network connection.',
+        sender: 'bot'
+      }]);
     } finally {
       setIsLoading(false);
     }
@@ -166,7 +170,7 @@ const GeminiChatbot: React.FC = () => {
         )}
       </div>
 
-      {/* Input Field */}
+      {/* Input */}
       <div className="p-4 border-t border-white/20 flex items-center">
         <input
           type="text"
