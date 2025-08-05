@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Send, Bot, User } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Send, Bot, User, Mic, MicOff } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { cn } from "@/lib/utils";
 
@@ -23,16 +23,16 @@ const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 const model = genAI?.getGenerativeModel({ model: "gemini-2.5-flash" });
 const chat = model?.startChat({
   generationConfig: {
-    maxOutputTokens: 1000,
+    maxOutputTokens: 2000, 
     temperature: 0.7,
   },
 });
 
 // Suggested questions
-const suggestedQuestions = [
-  'How can I improve my aim in Valorant?',
-  'What are some effective strategies for playing Apex Legends?',
-  'Explain the new updates in CS2.',
+const suggestedQuestions = [ 
+  'Find me Valorant tournaments to take part in.', 
+  'What is FaZe Clans current win rate on the map Inferno in CS2', 
+  'Who won the League of Legends World Championship in 2022?', 
 ];
 
 const GeminiChatbot: React.FC = () => {
@@ -40,16 +40,51 @@ const GeminiChatbot: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isListening, setIsListening] = useState(false);
 
-  // Check API key on mount
+  // useRef to keep track of the SpeechRecognition instance
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+
+  // Check API key and initialize SpeechRecognition on mount
   useEffect(() => {
     if (!apiKey) {
       setError("API key not found. Please set VITE_GEMINI_API_KEY in your .env file.");
+    }
+    
+    // Check for browser support and initialize the Web Speech API
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        // Automatically send the message after a pause in speech
+        setTimeout(() => handleSendMessage(transcript), 500); 
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+    } else {
+      console.warn('Web Speech API is not supported by this browser.');
     }
   }, []);
 
   const handleSendMessage = async (messageText: string) => {
     if (!messageText.trim() || isLoading || error || !chat) return;
+
+    // Modify the user's message to request structured data.
+    const modifiedMessage = `${messageText}. `;
 
     const newMessage: Message = { text: messageText, sender: 'user' };
     setMessages(prev => [...prev, newMessage]);
@@ -57,8 +92,8 @@ const GeminiChatbot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      console.log("📤 Sending message to Gemini:", messageText);
-      const result = await chat.sendMessage(messageText);
+      console.log("📤 Sending modified message to Gemini:", modifiedMessage);
+      const result = await chat.sendMessage(modifiedMessage);
 
       console.log("📥 Full Gemini Response:", result);
       const botResponseText = result?.response?.text?.() ?? '';
@@ -89,9 +124,24 @@ const GeminiChatbot: React.FC = () => {
     }
   };
 
+  const handleVoiceInput = () => {
+    if (!recognitionRef.current) {
+      alert('Your browser does not support the Web Speech API. Please use a browser like Chrome or Edge.');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+
   if (error) {
     return (
-      <div className="w-full h-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-lg h-[600px] bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl flex flex-col items-center justify-center p-4">
         <p className="text-red-500 font-bold text-center">{error}</p>
         <p className="text-sm text-gray-400 mt-2 text-center">
           Please check your `.env` file and restart the server.
@@ -101,12 +151,12 @@ const GeminiChatbot: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl flex flex-col">
+    <div className="w-full h-[600px] bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl flex flex-col mb-10">
       {/* Header */}
       <div className="p-4 border-b border-white/20 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Bot className="w-6 h-6 text-accent" />
-          <span className="text-white font-bold">Skor AI Assistant</span>
+          <img src="\assets\hunter_icon.png" alt="Gemini Logo" className="w-8 h-8" />
+          <span className="text-white font-bold">Agent Hunter</span>
         </div>
       </div>
 
@@ -114,8 +164,8 @@ const GeminiChatbot: React.FC = () => {
       <div className="flex-1 p-4 overflow-y-auto space-y-4 text-sm scrollbar-thin scrollbar-thumb-accent scrollbar-track-transparent">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center text-gray-400">
-            <Bot className="w-12 h-12 mb-4 text-accent" />
-            <p>Ask me anything about gaming strategy or your profile stats!</p>
+            <img src="\assets\hunter_icon.png" alt="Gemini Logo" className="w-12 h-12 mb-2" />
+            <p>Ask me anything about the World of Esports!</p>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
               {suggestedQuestions.map((q, index) => (
                 <button
@@ -139,7 +189,7 @@ const GeminiChatbot: React.FC = () => {
             >
               {msg.sender === 'bot' && (
                 <div className="mt-1">
-                  <Bot className="w-5 h-5 text-accent" />
+                  <img src="\assets\hunter_icon.png" alt="Gemini Logo" className="w-5 h-5" />
                 </div>
               )}
               <div
@@ -171,18 +221,28 @@ const GeminiChatbot: React.FC = () => {
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-white/20 flex items-center">
+      <div className="p-4 border-t border-white/20 flex items-center space-x-2">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Message Skor AI..."
+          placeholder="Message Agent Hunter..."
           className="flex-1 bg-transparent text-white placeholder-gray-400 focus:outline-none"
         />
         <button
-          onClick={() => handleSendMessage(input)}
+          onClick={handleVoiceInput}
           disabled={isLoading}
+          className={cn(
+            "text-gray-400 hover:text-accent transition disabled:opacity-50",
+            isListening && "text-red-500 hover:text-red-600 animate-pulse"
+          )}
+        >
+          {isListening ? <Mic className="w-5 h-5 text-accent" /> : <Mic className="w-5 h-5" />}
+        </button>
+        <button
+          onClick={() => handleSendMessage(input)}
+          disabled={isLoading || !input.trim()}
           className="text-gray-400 hover:text-accent transition disabled:opacity-50"
         >
           <Send className="w-5 h-5" />

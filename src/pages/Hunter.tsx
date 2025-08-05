@@ -42,7 +42,7 @@ function App() {
             <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
               Your ultimate gaming control center for tournaments, Web3 rewards, and exclusive coupons
             </p>
-            
+            <Chatbot />
             {/* Stats Bar */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
@@ -62,7 +62,7 @@ function App() {
         </section>
 
         {/* Main Sections */}
-        <Chatbot />
+        
         <Featured />
         
         <TournamentSection />

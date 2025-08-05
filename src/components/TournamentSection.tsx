@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Trophy, Users, Clock, Zap } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 
 interface Tournament {
   id: number;
@@ -15,7 +15,6 @@ interface Tournament {
 
 const TournamentSection: React.FC = () => {
   const [hoveredTournament, setHoveredTournament] = useState<number | null>(null);
-  const [showAll, setShowAll] = useState(false);
   const navigate = useNavigate();
 
   const tournaments: Tournament[] = [
@@ -63,12 +62,15 @@ const TournamentSection: React.FC = () => {
 
   return (
     <section className="mb-12">
-      <div className="flex items-center mb-6">
-        <Trophy className="w-6 h-6 text-[#EE5946] mr-3" />
-        <h2 className="text-2xl font-bold text-white">Gaming Tournaments</h2>
-        <div className="ml-4 px-3 py-1 bg-[#EE5946]/20 border border-[#EE5946]/30 rounded-full">
-          <span className="text-[#EE5946] text-sm font-medium">Live Arena</span>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <Trophy className="w-6 h-6 text-[#EE5946] mr-3" />
+          <h2 className="text-2xl font-bold text-white">Gaming Tournaments</h2>
+          <div className="ml-4 px-3 py-1 bg-[#EE5946]/20 border border-[#EE5946]/30 rounded-full">
+            <span className="text-[#EE5946] text-sm font-medium">Live Arena</span>
+          </div>
         </div>
+        <Link to="/tournaments" className="text-[#EE5946] text-sm font-semibold hover:underline transition">Show More</Link>
       </div>
 
       <div className="relative">
@@ -84,16 +86,12 @@ const TournamentSection: React.FC = () => {
 
           {/* Tournament cards */}
           <div
-            className={`relative grid grid-cols-1 md:grid-cols-3 gap-6  transition-all duration-700 ${
-              showAll ? 'max-h-[3000px] opacity-100 scale-100' : 'max-h-[1200px] opacity-90 scale-95'
-            }`}
+            className="relative grid grid-cols-1 md:grid-cols-3 gap-6"
           >
-            {(showAll ? tournaments : tournaments.slice(0, 3)).map((tournament) => (
+            {tournaments.slice(0, 3).map((tournament) => (
               <div
                 key={tournament.id}
-                className={`group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 transition-all duration-500 hover:bg-white/10 hover:border-[#EE5946]/50 hover:shadow-[0_0_30px_rgba(238,89,70,0.3)] cursor-pointer ${
-                  hoveredTournament === tournament.id ? 'transform scale-105' : ''
-                }`}
+                className={`group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 transition-all duration-500 hover:bg-white/10 hover:border-[#EE5946]/50 hover:shadow-[0_0_30px_rgba(238,89,70,0.3)] cursor-pointer ${hoveredTournament === tournament.id ? 'transform scale-105' : ''}`}
                 onMouseEnter={() => setHoveredTournament(tournament.id)}
                 onMouseLeave={() => setHoveredTournament(null)}
               >
@@ -153,18 +151,6 @@ const TournamentSection: React.FC = () => {
               </div>
             ))}
           </div>
-
-          {/* Show More / Show Less */}
-          {tournaments.length > 3 && (
-            <div className="text-center mt-8 z-20 relative">
-              <button
-                onClick={() => setShowAll(!showAll)}
-                className="text-[#EE5946] text-sm font-semibold hover:underline transition"
-              >
-                {showAll ? 'Show Less' : 'Show More'}
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </section>
