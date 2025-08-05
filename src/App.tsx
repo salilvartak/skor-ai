@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import ProfileSetup from "./pages/ProfileSetup";
 import Profile from "./pages/profile";
 import Tournament from "./pages/Tournaments";
+import Riot from "./pages/Stats";
 import { auth } from './firebase';
 import { useEffect } from "react";
 
@@ -56,6 +57,7 @@ const App = () => (
           <Route path="/profile-setup" element={<ProfileSetup />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/tournaments" element={<Tournament />} />
+          <Route path="/app" element={<Riot />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
