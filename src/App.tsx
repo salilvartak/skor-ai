@@ -8,7 +8,8 @@ import Dashboard from "./pages/Dashboard";
 import Hunter from "./pages/Hunter";
 import NotFound from "./pages/NotFound";
 import ProfileSetup from "./pages/ProfileSetup";
-import Profile from "./pages/profile"; // Import the new Profile page
+import Profile from "./pages/profile";
+import Tournament from "./pages/Tournaments";
 import { auth } from './firebase';
 import { useEffect } from "react";
 
@@ -53,7 +54,8 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/hunter" element={<Hunter />} />
           <Route path="/profile-setup" element={<ProfileSetup />} />
-          <Route path="/profile" element={<Profile />} /> {/* New route for the profile page */}
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/tournaments" element={<Tournament />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

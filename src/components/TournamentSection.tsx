@@ -1,64 +1,11 @@
 import React, { useState } from 'react';
 import { Trophy, Users, Clock, Zap } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
-
-interface Tournament {
-  id: number;
-  title: string;
-  game: string;
-  prize: string;
-  participants: number;
-  timeLeft: string;
-  status: 'live' | 'upcoming' | 'ended';
-  link: string;
-}
+import { allTournaments, Tournament } from '@/data/tournaments'; // Import from the new data file
 
 const TournamentSection: React.FC = () => {
   const [hoveredTournament, setHoveredTournament] = useState<number | null>(null);
   const navigate = useNavigate();
-
-  const tournaments: Tournament[] = [
-    {
-      id: 1,
-      title: "Cyber Championship",
-      game: "Apex Legends",
-      prize: "$50,000",
-      participants: 2847,
-      timeLeft: "2h 15m",
-      status: 'live',
-      link: "/tournaments/cyber-championship"
-    },
-    {
-      id: 2,
-      title: "Neon Nights",
-      game: "Valorant",
-      prize: "$25,000",
-      participants: 1523,
-      timeLeft: "1d 4h",
-      status: 'upcoming',
-      link: "/tournaments/neon-nights"
-    },
-    {
-      id: 3,
-      title: "Digital Duel",
-      game: "CS2",
-      prize: "$75,000",
-      participants: 3291,
-      timeLeft: "Starting Soon",
-      status: 'live',
-      link: "/tournaments/digital-duel"
-    },
-    {
-      id: 4,
-      title: "Shadow Clash",
-      game: "Overwatch 2",
-      prize: "$15,000",
-      participants: 980,
-      timeLeft: "3d 2h",
-      status: 'upcoming',
-      link: "/tournaments/shadow-clash"
-    }
-  ];
 
   return (
     <section className="mb-12">
@@ -88,7 +35,7 @@ const TournamentSection: React.FC = () => {
           <div
             className="relative grid grid-cols-1 md:grid-cols-3 gap-6"
           >
-            {tournaments.slice(0, 3).map((tournament) => (
+            {allTournaments.slice(0, 3).map((tournament) => (
               <div
                 key={tournament.id}
                 className={`group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 transition-all duration-500 hover:bg-white/10 hover:border-[#EE5946]/50 hover:shadow-[0_0_30px_rgba(238,89,70,0.3)] cursor-pointer ${hoveredTournament === tournament.id ? 'transform scale-105' : ''}`}
@@ -113,7 +60,7 @@ const TournamentSection: React.FC = () => {
 
                 {/* Info */}
                 <div className="mb-4">
-                  <h3 className="text-lg font-bold text-white mb-1">{tournament.title}</h3>
+                  <h3 className="text-lg font-bold text-white mb-1 w-[80%]">{tournament.title}</h3>
                   <p className="text-white/60 text-sm">{tournament.game}</p>
                 </div>
 
