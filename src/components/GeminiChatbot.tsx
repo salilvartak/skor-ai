@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, User, Mic } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import ReactMarkdown from 'react-markdown'; 
 import { cn } from "@/lib/utils";
 
 // Message type
@@ -42,11 +43,14 @@ Tournament Discovery: Identify relevant upcoming esports tournaments based on sk
 Data-Driven Decisions: Leverage historical gameplay patterns, team analytics, and performance metrics to back your advice.
 Meta Awareness: Stay current with live patch changes, agent/hero balancing, and map pool shifts, adjusting your strategy recommendations accordingly.
 
+
 Tone & Style:
 
 Communicate like a serious yet motivating coach preparing a team for high-stakes competition.
 Responses should be structured, actionable, and data-driven, with clear tactical reasoning.
+**Always format your responses using Markdown. Use headings, bold text, and bulleted lists to make the information easy to digest.**
 Use esports vocabulary and game-specific terminology with clarity and precision.
+
 
 Example Queries from Users:
 
@@ -195,7 +199,7 @@ const GeminiChatbot: React.FC = () => {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-4 text-sm scrollbar-thin scrollbar-thumb-accent scrollbar-track-transparent">
+      <div className="flex-1 p-4 overflow-y-auto space-y-4 text-sm scrollbar-thin scrollbar scrollbar-track-transparent">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center text-gray-400">
             <img src="\assets\hunter_icon.png" alt="Agent Hunter Logo" className="w-12 h-12 mb-2" />
@@ -232,7 +236,9 @@ const GeminiChatbot: React.FC = () => {
                   msg.sender === 'user' ? 'bg-accent text-white' : 'bg-white/10 text-white'
                 )}
               >
-                {msg.text}
+                <div className="prose prose-sm prose-invert max-w-none">
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                </div>
               </div>
               {msg.sender === 'user' && (
                 <div className="mt-1">
