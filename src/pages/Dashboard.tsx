@@ -93,22 +93,27 @@ useEffect(() => {
   const fetchPriceData = async () => {
     try {
       const response = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=skor-ai&vs_currencies=usd&include_24hr_change=true"
-    );
-    const data = await response.json();
-
-      if (!response.ok) throw new Error("Failed to fetch price data");
-
-      
-      const price = data.bitcoin.usd.toFixed(2);
-      const change = data.bitcoin.usd_24h_change.toFixed(2);
-
-      setPrice(price);
-      setPctChange(
-        Number(change) >= 0 ? `+${change}%` : `${change}%`
+        "https://api.coingecko.com/api/v3/coins/skor-ai/market_chart?vs_currency=usd&days=30"
       );
-    } catch (err) {
-      console.error("Error fetching price data:", err);
+      const data = await response.json();
+
+      const prices = data.prices;
+
+      if (!Array.isArray(prices) || prices.length < 2) {
+        throw new Error("Insufficient price data");
+      }
+
+      const startPrice = prices[0][1]; // Price 30 days ago
+      const latestPrice = prices[prices.length - 1][1]; // Most recent price
+
+      const priceChange = ((latestPrice - startPrice) / startPrice) * 100;
+
+      setPrice(latestPrice.toFixed(4));
+      setPctChange(
+        priceChange >= 0 ? `+${priceChange.toFixed(2)}%` : `${priceChange.toFixed(2)}%`
+      );
+    } catch (error) {
+      console.error("Error fetching price data:", error);
       setPrice("N/A");
       setPctChange("Error");
     } finally {
@@ -118,6 +123,10 @@ useEffect(() => {
 
   fetchPriceData();
 }, []);
+
+
+
+
 
   return (
     <div className="font-chakra min-h-screen bg-gradient-to-br from-[#141110] via-[#2a1f1a] to-back grid grid-cols-[auto_1fr_auto]">
