@@ -1,3 +1,4 @@
+// src/App.tsx
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +12,9 @@ import ProfileSetup from "./pages/ProfileSetup";
 import Profile from "./pages/profile";
 import Tournament from "./pages/Tournaments";
 import Riot from "./pages/Stats";
+import ValorantSelector from "./pages/Guide"; 
+import LiveMatchPage from "./pages/LiveMatchPage";
+import SovaSun from "./pages/lineup/sova-sunset"; 
 import { auth } from './firebase';
 import { useEffect } from "react";
 
@@ -58,6 +62,9 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/tournaments" element={<Tournament />} />
           <Route path="/app" element={<Riot />} />
+          <Route path="/live-match" element={<LiveMatchPage />} /> 
+          <Route path="/dashboard/guide" element={<ValorantSelector />} /> 
+          <Route path="/sunset-sova" element={<SovaSun />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

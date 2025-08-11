@@ -258,7 +258,8 @@ useEffect(() => {
               <div className="grid grid-cols-3 gap-4">
                 <AgentCard name="Hunter" image="/assets/hunter.png" />
                 <AgentCard name="Precision" image="/assets/presion.png" />
-                <LockedCard />
+                <AgentCard name="Guide" image="" />
+                
               </div>
             </div>
 

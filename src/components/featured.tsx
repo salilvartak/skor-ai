@@ -2,6 +2,8 @@ import React from "react";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import { Gem } from "lucide-react";
+import { link } from "fs";
+import { Link } from "react-router-dom";
 
 const featuredTournaments = [
   {
@@ -10,6 +12,7 @@ const featuredTournaments = [
     status: "live",
     img: "/assets/vct.jpg", // replace with real image path
     cta: "Watch Live",
+    link: "/live-match" // Link to the live match page
   },
   {
     id: 2,
@@ -17,6 +20,7 @@ const featuredTournaments = [
     status: "upcoming",
     img: "/assets/ewc.jpg",
     cta: "Join Tournament",
+    link: ""
   },
 ];
 
@@ -72,9 +76,11 @@ const FeaturedCarousel: React.FC = () => {
                       <h3 className="text-3xl font-bold text-white mb-2">{item.title}</h3>
                     </div>
 
-                    <button className="mt-auto bg-gradient-to-r from-[#EE5946] to-red-600 hover:from-red-600 hover:to-[#EE5946] text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform group-hover:scale-105">
-                      {item.cta}
-                    </button>
+                    <Link to={item.link} className="flex items-center justify-center">
+                      <button className="mt-auto bg-gradient-to-r from-[#EE5946] to-red-600 hover:from-red-600 hover:to-[#EE5946] text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform group-hover:scale-105">
+                        {item.cta}
+                      </button>
+                    </Link>
 
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-[#EE5946]/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />

@@ -1,7 +1,8 @@
+// src/components/TournamentSection.tsx
 import React, { useState } from 'react';
 import { Trophy, Users, Clock, Zap } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
-import { allTournaments, Tournament } from '@/data/tournaments'; // Import from the new data file
+import { allTournaments, Tournament } from '@/data/tournaments';
 
 const TournamentSection: React.FC = () => {
   const [hoveredTournament, setHoveredTournament] = useState<number | null>(null);
@@ -28,7 +29,7 @@ const TournamentSection: React.FC = () => {
         <div className="relative z-10 bg-black/30 backdrop-blur-lg border border-white/20 rounded-3xl p-8 shadow-2xl">
           {/* Decorative grid */}
           <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <div className="w-full h-full bg-[linear-gradient(rgba(238,89,70,0.3)_1px,transparent_1px),linear-gradient(90deg,rgba(238,89,70,0.3)_1px,transparent_1px)] bg-[size:20px_20px] rounded-3xl"></div>
+            <div className="w-full h-full bg-[linear-gradient(rgba(238,89,70,0.3)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px] rounded-3xl"></div>
           </div>
 
           {/* Tournament cards */}
@@ -85,9 +86,9 @@ const TournamentSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Button */}
+                {/* Button updated to navigate to the new page */}
                 <button
-                  onClick={() => navigate(tournament.link)}
+                  onClick={() => navigate(`/live-match/${tournament.id}`)}
                   className="w-full bg-gradient-to-r from-[#EE5946] to-red-600 hover:from-red-600 hover:to-[#EE5946] text-white font-medium py-3 rounded-xl transition-all duration-300 transform group-hover:scale-105"
                 >
                   {tournament.status === 'live' ? 'Watch Live' : 'Join Tournament'}
