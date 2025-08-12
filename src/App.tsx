@@ -15,6 +15,7 @@ import Riot from "./pages/Stats";
 import ValorantSelector from "./pages/Guide"; 
 import LiveMatchPage from "./pages/LiveMatchPage";
 import SovaSun from "./pages/lineup/sova-sunset"; 
+import Submission from "./pages/submissionform"; 
 import { auth } from './firebase';
 import { useEffect } from "react";
 
@@ -65,6 +66,7 @@ const App = () => (
           <Route path="/live-match" element={<LiveMatchPage />} /> 
           <Route path="/dashboard/guide" element={<ValorantSelector />} /> 
           <Route path="/sunset-sova" element={<SovaSun />} />
+          <Route path="/submission" element={<Submission />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const featuredTournaments = [
   {
     id: 1,
-    title: "VCT PACIFIC",
+    title: "2025 WDG Valorant Challengers Korea",
     status: "live",
     img: "/assets/vct.jpg", // replace with real image path
     cta: "Watch Live",
@@ -16,11 +16,11 @@ const featuredTournaments = [
   },
   {
     id: 2,
-    title: "Esports World Cup",
+    title: "TEC LAN PARTY- St. Xavier's College",
     status: "upcoming",
-    img: "/assets/ewc.jpg",
+    img: "https://theesports.club/_next/image?url=https%3A%2F%2Fcdn.theesports.club%2FMain_Banner_(34)-1509d7b1-3ff4-4782-b8df-51cdd5b8e3da.png&w=1920&q=75",
     cta: "Join Tournament",
-    link: ""
+    link: "/submission"
   },
 ];
 
@@ -73,7 +73,7 @@ const FeaturedCarousel: React.FC = () => {
                     )}
 
                     <div className="mt-6">
-                      <h3 className="text-3xl font-bold text-white mb-2">{item.title}</h3>
+                      <h3 className="text-3xl font-bold text-white mb-2 text-center">{item.title}</h3>
                     </div>
 
                     <Link to={item.link} className="flex items-center justify-center">
