@@ -13,102 +13,146 @@ export interface Tournament {
 export const allTournaments: Tournament[] = [
  {
     id: 1,
-    title: "TEZ Free Fire Max India Cup 2025",
-    game: "Free Fire Max",
-    prize: "₹1 crore (~USD 120k)",
-    participants: 48,
-    timeLeft: "2025-07-13 23:59",
-    status: "upcoming",
-    link: "https://indiatimes.com/trending/tez-free-fire-max-india-cup-2025"
+    title: "VCT 2025: Pacific Stage 2",
+    game: "Valorant",
+    prize: "$250,000 USD",
+    participants: 10, // Common number of teams in VCT regional leagues
+    timeLeft: "2025-08-31 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
   },
   {
     id: 2,
-    title: "PUBG Mobile World Cup 2025 (PMWC)",
-    game: "PUBG Mobile",
-    prize: "USD 3,050,000",
-    participants: 24,
-    timeLeft: "2025-08-03 22:00",
+    title: "VCT 2025: EMEA Stage 2",
+    game: "Valorant",
+    prize: "$250,000 USD",
+    participants: 10, // Common number of teams in VCT regional leagues
+    timeLeft: "2025-08-31 23:59", // End Date
     status: "live",
-    link: "https://en.wikipedia.org/wiki/PUBG_Mobile_World_Cup_2025"
+    link: "https://www.vlr.gg/events"
   },
   {
     id: 3,
-    title: "Esports World Cup 2025 – Teamfight Tactics",
-    game: "Teamfight Tactics",
-    prize: "Part of EWC prize pool",
-    participants: 16,
-    timeLeft: "2025-08-15 20:00",
-    status: "upcoming",
-    link: "https://en.wikipedia.org/wiki/2025_Esports_World_Cup_%E2%80%93_Teamfight_Tactics"
+    title: "VCT 2025: China Stage 2",
+    game: "Valorant",
+    prize: "TBD",
+    participants: 10, // Common number of teams in VCT regional leagues
+    timeLeft: "2025-08-24 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
   },
   {
     id: 4,
-    title: "Esports World Cup 2025 – Warzone",
-    game: "Call of Duty: Warzone",
-    prize: "Part of EWC prize pool",
-    participants: 16,
-    timeLeft: "2025-08-09 20:00",
+    title: "VCT 2025: Americas Stage 2",
+    game: "Valorant",
+    prize: "$250,000 USD",
+    participants: 10, // Common number of teams in VCT regional leagues
+    timeLeft: "2025-09-01 23:59", // End Date
     status: "live",
-    link: "https://escharts.com/tournaments"
+    link: "https://www.vlr.gg/events"
   },
   {
     id: 5,
-    title: "First Stand Tournament 2025",
-    game: "League of Legends",
-    prize: "International title prestige",
-    participants: 5,
-    timeLeft: "2025-03-16 21:00",
-    status: "ended",
-    link: "https://en.wikipedia.org/wiki/First_Stand_Tournament"
+    title: "Challengers 2025: North America ACE Stage 3",
+    game: "Valorant",
+    prize: "$61,500 USD",
+    participants: 12, // Typical Challengers participants
+    timeLeft: "2025-09-04 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
   },
   {
     id: 6,
-    title: "PGL Cluj-Napoca 2025",
-    game: "Counter-Strike 2",
-    prize: "€1,250,000",
-    participants: 16,
-    timeLeft: "2025-02-23 23:00",
-    status: "ended",
-    link: "https://en.wikipedia.org/wiki/PGL_Esports"
+    title: "CONTEST SUMMER CUP 2025",
+    game: "Valorant",
+    prize: "$1,144 USD",
+    participants: 8, // Estimated for smaller cup
+    timeLeft: "2025-08-30 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
   },
   {
     id: 7,
-    title: "BLAST Bounty 2025 Season 2 Finals",
-    game: "Counter-Strike 2",
-    prize: "USD 500,000",
-    participants: 8,
-    timeLeft: "2025-08-17 22:00",
-    status: "upcoming",
-    link: "https://www.hltv.org/events"
+    title: "Challengers League 2025: Japan Finals",
+    game: "Valorant",
+    prize: "$32,404 USD",
+    participants: 8, // Estimated for finals
+    timeLeft: "2025-08-24 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
   },
   {
     id: 8,
-    title: "BLAST Open London 2025",
-    game: "Counter-Strike 2",
-    prize: "USD 330,000",
-    participants: 16,
-    timeLeft: "2025-09-01 21:00",
-    status: "upcoming",
-    link: "https://www.hltv.org/events"
+    title: "Spike Tour 2025: Split 2",
+    game: "Valorant",
+    prize: "$4,096 USD",
+    participants: 16, // Estimated for a tour
+    timeLeft: "2025-08-24 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
   },
   {
     id: 9,
-    title: "Evo 2025 Fighting Games",
-    game: "Various (Street Fighter, Tekken, etc)",
-    prize: "Multiple titles & cash pools",
-    participants: 8500,
-    timeLeft: "2025-08-05 23:59",
+    title: "Challengers 2025: Southeast Asia Split 3",
+    game: "Valorant",
+    prize: "$50,000 USD",
+    participants: 12, // Typical Challengers participants
+    timeLeft: "2025-09-07 23:59", // End Date
     status: "live",
-    link: "https://www.theverge.com/games/717660/how-to-watch-evo-2025-las-vegas"
+    link: "https://www.vlr.gg/events"
   },
   {
     id: 10,
-    title: "PlayStation Tournaments: XP (London)",
-    game: "Tekken 8, EA Sports FC 25, Fortnite, Astro Bot",
-    prize: "Travel + exclusive prizes",
-    participants: 64,
-    timeLeft: "2025-01-18 18:00",
-    status: "ended",
-    link: "https://www.theverge.com/2024/12/5/24314105/playstation-tournaments-xp-off-esports-series-london-event"
-  }
+    title: "Challengers 2025: Korea WDG Stage 3",
+    game: "Valorant",
+    prize: "$31,634 USD",
+    participants: 12, // Typical Challengers participants
+    timeLeft: "2025-08-22 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
+  },
+  {
+    id: 11,
+    title: "The Major Six 2025",
+    game: "Valorant",
+    prize: "$18,121 USD",
+    participants: 6, // Title suggests 6
+    timeLeft: "2025-08-30 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
+  },
+  {
+    id: 12,
+    title: "Game Changers 2025: North America Stage 2",
+    game: "Valorant",
+    prize: "$60,000 USD",
+    participants: 8, // Typical GC participants
+    timeLeft: "2025-10-12 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
+  },
+  {
+    id: 13,
+    title: "Game Changers 2025: LATAM Main Event",
+    game: "Valorant",
+    prize: "$74,704 USD",
+    participants: 8, // Typical GC participants
+    timeLeft: "2025-09-11 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
+  },
+  {
+    id: 14,
+    title: "Bell Esports Challenge 2025",
+    game: "Valorant",
+    prize: "$6,572 USD",
+    participants: 16, // Estimated
+    timeLeft: "2025-08-23 23:59", // End Date
+    status: "live",
+    link: "https://www.vlr.gg/events"
+  },
+
+  // Upcoming Tournaments
+ 
+
 ];

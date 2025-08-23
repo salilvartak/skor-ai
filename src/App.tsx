@@ -16,6 +16,8 @@ import ValorantSelector from "./pages/Guide";
 import LiveMatchPage from "./pages/LiveMatchPage";
 import SovaSun from "./pages/lineup/sova-sunset"; 
 import Submission from "./pages/submissionform"; 
+import FollowTeamPage from "./pages/FollowTeamPage"; // Import the new FollowTeamPage
+import TeamFeedPage from "./pages/TeamFeedPage"; // Import the new TeamFeedPage
 import { auth } from './firebase';
 import { useEffect } from "react";
 
@@ -67,6 +69,8 @@ const App = () => (
           <Route path="/dashboard/guide" element={<ValorantSelector />} /> 
           <Route path="/sunset-sova" element={<SovaSun />} />
           <Route path="/submission" element={<Submission />} />
+          <Route path="/teams" element={<FollowTeamPage />} /> {/* Existing Route */}
+          <Route path="/teams/:teamId" element={<TeamFeedPage />} /> {/* New Route for Team Feed */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

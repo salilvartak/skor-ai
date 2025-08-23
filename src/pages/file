@@ -17,7 +17,6 @@ import { signOut, onAuthStateChanged, User as FirebaseUser } from "firebase/auth
 import { auth } from "@/firebase";
 import { db } from "@/firebase"; // Firestore import
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { set, get, remove } from 'firebase/database';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Dashboard() {
@@ -29,7 +28,6 @@ export default function Dashboard() {
 
   // Time tracking state
   const [timeSpent, setTimeSpent] = useState<number>(0);
-  const [lastOnline, setLastOnline] = useState<number>(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auth listener
@@ -45,26 +43,22 @@ export default function Dashboard() {
     if (!user) return;
 
     const fetchTimeSpent = async () => {
-     try {
-      const userDocRef = doc(db, "users", user.uid);
-      const userDoc = await getDoc(userDocRef);
-      if (userDoc.exists()) {
-        const savedTime = userDoc.data().timeSpent || 0;
-        const lastOnlineTimestamp = userDoc.data().lastOnline || Date.now();
-        const timeDifference = Math.floor((Date.now() - lastOnlineTimestamp) / 1000);
-
-        setTimeSpent(savedTime + timeDifference);
-        setLastOnline(lastOnlineTimestamp);
-      } else {
-        setTimeSpent(0);
-        setLastOnline(Date.now());
+      try {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const savedTime = userDoc.data().timeSpent || 0;
+          setTimeSpent(savedTime);
+        } else {
+          setTimeSpent(0);
+        }
+      } catch (err) {
+        console.error("Error fetching user timeSpent:", err);
       }
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-    }
     };
+
     fetchTimeSpent();
-  }, [user?.uid]);
+  }, [user]);
 
   // Start timer when user available
   useEffect(() => {
@@ -87,7 +81,7 @@ export default function Dashboard() {
       try {
         const userDocRef = doc(db, "users", user.uid);
         await updateDoc(userDocRef, { timeSpent });
-        } catch (err) {
+      } catch (err) {
         console.error("Error saving timeSpent:", err);
       }
     }, 30000);
@@ -102,9 +96,6 @@ export default function Dashboard() {
       try {
         const userDocRef = doc(db, "users", user.uid);
         await updateDoc(userDocRef, { timeSpent });
-        await updateDoc(userDocRef, {
-              lastOnline: Date.now(),
-            });
       } catch (err) {
         console.error("Error saving timeSpent on unload:", err);
       }
@@ -118,11 +109,6 @@ export default function Dashboard() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      if (user) {
-        const userDocRef = doc(db, "users", user.uid);
-              await updateDoc(userDocRef, { lastOnline: Date.now() });
-            }
-    
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
@@ -137,7 +123,7 @@ export default function Dashboard() {
   };
 
   const agentSlides = [
-   {
+    {
       title: "Agent Precision",
       button: "Try Now →",
       image: "",
@@ -223,9 +209,9 @@ useEffect(() => {
             key={i}
             className="absolute w-32 h-32 bg-[#EE5946]/5 rounded-full blur-xl animate-pulse"
             style={{
-              left: `${12 * 100}%`,
-              top: `${10 * 100}%`,
-              
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
               animationDuration: `${4 + Math.random() * 4}s`
             }}
           ></div>
@@ -277,7 +263,6 @@ useEffect(() => {
         >
           <LogOut className="w-6 h-6 text-gray-400 group-hover:text-red-500 transition-colors" />
         </button>
-        </div>
       </aside>
 
       {/* Main Content */}
@@ -404,11 +389,11 @@ useEffect(() => {
             </div>
 
             {/* Statistics Box */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 flex flex-col  min-h-[480px] relative overflow-hidden">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 flex flex-col justify-between min-h-[480px] relative overflow-hidden">
               <h3 className="text-orange-400 text-lg mb-2">Your Statistics</h3>
               <div className="flex justify-center items-center relative z-10">
-                <p className="text-white rounded-full py-16 px-6 w-fit ring-accent/50 ring-4 text-5xl font-bold text-center font-chakra relative z-10">
-                  {formatTime(timeSpent)} <span className="text-sm"></span>
+                <p className="text-white rounded-full pt-20 pb-20 pl-5 pr-5 w-fit ring-accent/50 ring-4 text-5xl font-bold text-center font-chakra relative z-10">
+                  {formatTime(timeSpent)} <span className="text-sm">Active</span>
                 </p>
               </div>
               {/* You can keep or update other stats here */}

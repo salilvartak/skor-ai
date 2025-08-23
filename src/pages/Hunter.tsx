@@ -18,9 +18,8 @@ function App() {
             key={i}
             className="absolute w-32 h-32 bg-[#EE5946]/5 rounded-full blur-xl animate-pulse"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
+              left: `${12 * 100}%`,
+              top: `${10 * 100}%`,
               animationDuration: `${4 + Math.random() * 4}s`
             }}
           ></div>
@@ -72,10 +71,10 @@ function App() {
         {/* Footer */}
         <footer className="mt-16 pb-8 text-center">
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-white mb-4">Ready to Level Up?</h3>
-            <p className="text-white/60 mb-6">Join thousands of gamers earning rewards and competing in epic tournaments</p>
+            <h3 className="text-2xl font-bold text-white mb-4">Start staking today and let your assets work<br></br> for you while you earn effortlessly</h3>
+            
             <button className="bg-gradient-to-r from-[#EE5946] to-red-600 hover:from-red-600 hover:to-[#EE5946] text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
-              Get Started Now
+              Start Staking
             </button>
           </div>
         </footer>
